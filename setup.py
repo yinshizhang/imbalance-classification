@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='ibc',
@@ -13,4 +13,5 @@ setup(
         "torch == 1.10.2",
         "torchmetrics == 0.10.1"
     ],
+    packages=find_packages(),
 )
