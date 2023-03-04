@@ -2,7 +2,7 @@ import torch
 import numpy as np
 import pandas as pd
 from torch.utils.data import Dataset
-from samplers import blmovgen, admovgen, adboth
+from .samplers import blmovgen, admovgen, adboth
 from imblearn.over_sampling import RandomOverSampler, SMOTE, ADASYN, BorderlineSMOTE
 
 
