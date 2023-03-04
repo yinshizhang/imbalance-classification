@@ -1,11 +1,11 @@
 import os
 import torch
 from torch import nn
-from models import MLP
 from torch.optim import SGD, Adam
-from data import load_data, resampling, test_split, csvDS
 from torch.utils.data import DataLoader
-from metrics import Metrics
+from .models import MLP
+from .metrics import Metrics
+from .data import load_data, resampling, test_split, csvDS
 
 
 # define the parameters

@@ -1,8 +1,13 @@
-from torch import trapz
-from typing import Any, List, Optional, Union
-from torchmetrics.classification import BinaryAUROC, BinaryConfusionMatrix, BinaryPrecisionRecallCurve, BinaryF1Score, BinaryAccuracy, BinaryRecall, BinaryPrecision, BinaryConfusionMatrix, BinaryAveragePrecision
-from torchmetrics.classification.precision_recall_curve import BinaryPrecisionRecallCurve
-
+from torchmetrics.classification import (
+    BinaryAUROC,
+    BinaryConfusionMatrix,
+    BinaryF1Score,
+    BinaryAccuracy,
+    BinaryRecall,
+    BinaryPrecision,
+    BinaryConfusionMatrix,
+    BinaryAveragePrecision
+)
 # # to be removed
 # from torchmetrics.utilities.data import dim_zero_cat
 # from torchmetrics.functional.classification.auroc import _binary_auroc_arg_validation, _binary_auroc_compute
