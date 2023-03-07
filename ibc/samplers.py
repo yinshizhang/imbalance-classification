@@ -167,3 +167,71 @@ def adboth(x, y, m_neighbors=5, n_neighbors=5, alpha=1.0):
 # (0.8957356214523315, 0.6804123520851135, 0.9428571462631226, 0.8165680766105652) adasyn
 # (0.8432836532592773, 0.6034482717514038, 1.0,                0.7278106212615967) blmovgen
 # (0.868869960308075,  0.6476190686225891, 0.9714285731315613, 0.7810651063919067) admovgen
+
+
+
+
+# blmix class for binary classification
+def blmix(x, y, n_neighbors=5, alpha=0.5, **kwargs):
+    # sample strategy for each minority classes
+    _, counts = np.unique(y, return_counts=True)
+    sample_size = max(counts) - counts
+
+    gen_x = []
+    gen_y = []
+
+    # generate synthetic data for each minority class
+    for i, size in enumerate(sample_size):
+        if size == 0:
+            continue
+        min_idxs = np.where(y == i)[0]
+        maj_idxs = np.where(y != i)[0]
+
+        # find nearest majority neighbors for each minority instance
+        nbrs = NearestNeighbors(n_neighbors=n_neighbors).fit(x[maj_idxs])
+        _, indices = nbrs.kneighbors(x[min_idxs])
+
+        # generate synthetic data
+        for j in np.random.randint(0, len(min_idxs), size):
+            min_idx = min_idxs[j]
+            rand_idx = np.random.randint(n_neighbors)
+            maj_idx2 = maj_idxs[indices[j][rand_idx]]
+            new_x = x[min_idx] * alpha + x[maj_idx2] * (1 - alpha)
+            gen_x.append(new_x)
+            gen_y.append(i)
+    gen_x = np.array(gen_x)
+    gen_y = np.array(gen_y)
+    return np.concatenate((x, gen_x), axis=0), np.concatenate((y, gen_y), axis=0)
+
+# blmixrand class for binary classification
+def blmixrand(x, y, n_neighbors=5, alpha=0.5, **kwargs):
+    # sample strategy for each minority classes
+    _, counts = np.unique(y, return_counts=True)
+    sample_size = max(counts) - counts
+
+    gen_x = []
+    gen_y = []
+
+    # generate synthetic data for each minority class
+    for i, size in enumerate(sample_size):
+        if size == 0:
+            continue
+        min_idxs = np.where(y == i)[0]
+        maj_idxs = np.where(y != i)[0]
+
+        # find nearest majority neighbors for each minority instance
+        nbrs = NearestNeighbors(n_neighbors=n_neighbors).fit(x[maj_idxs])
+        _, indices = nbrs.kneighbors(x[min_idxs])
+
+        # generate synthetic data
+        for j in np.random.randint(0, len(min_idxs), size):
+            min_idx = min_idxs[j]
+            rand_idx = np.random.randint(n_neighbors)
+            fac = np.random.uniform(alpha, 1)
+            maj_idx2 = maj_idxs[indices[j][rand_idx]]
+            new_x = x[min_idx] * alpha + x[maj_idx2] * (1 - alpha)
+            gen_x.append(new_x)
+            gen_y.append(i)
+    gen_x = np.array(gen_x)
+    gen_y = np.array(gen_y)
+    return np.concatenate((x, gen_x), axis=0), np.concatenate((y, gen_y), axis=0)
