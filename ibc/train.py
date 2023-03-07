@@ -3,7 +3,7 @@ import torch
 from torch import nn
 from torch.optim import SGD, Adam
 from torch.utils.data import DataLoader
-from .models import MLP
+from .models import MLP, SMLP
 from .metrics import Metrics
 from .data import load_data, resampling, test_split, csvDS
 
@@ -17,7 +17,7 @@ from .data import load_data, resampling, test_split, csvDS
 # test_size = 0.2
 # epochs = 1000
 
-def run(dsname, sampling, seed, test_size, epochs, outexten=''):
+def run(dsname, sampling, seed, test_size=0.2, epochs=1000, outexten='', lr=1e-3, opt='sgd'):
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -30,15 +30,17 @@ def run(dsname, sampling, seed, test_size, epochs, outexten=''):
     # convert to dataset
     train_ds = csvDS(x_train, y_train)
     test_ds = csvDS(x_test, y_test)
+    # train_dl = DataLoader(train_ds, batch_size=len(train_ds), shuffle=True)
     train_dl = DataLoader(train_ds, batch_size=64, shuffle=True)
     test_dl = DataLoader(test_ds, batch_size=256, shuffle=False)
 
     # define the model
-    model = MLP(input_size=x_train.shape[1]).to(device)
+    model = SMLP(input_size=x_train.shape[1]).to(device)
 
     # define the loss function
     loss_fn = nn.BCEWithLogitsLoss()
-    optimizer = SGD(model.parameters(), lr=1e-3, momentum=0.9)
+    optimizer = SGD(model.parameters(), lr=lr, momentum=0.9) if opt == 'sgd' else Adam(
+        model.parameters(), lr=lr)
     evaluator = Metrics(device)
 
     # create log file
@@ -46,8 +48,8 @@ def run(dsname, sampling, seed, test_size, epochs, outexten=''):
     if not os.path.exists(fname):
         with open(fname, 'w') as f:
             f.write(
-                "dataset,sampling,seed,epoch,acc,recall,precision,f1,gmean,auc,ap\n")
-    log_header = f"{dsname},{sampling},{seed},"
+                "dataset,sampling,seed,opt,lr,epoch,acc,recall,precision,f1,gmean,auc,ap\n")
+    log_header = f"{dsname},{sampling},{seed},{opt},{lr},"
 
     print(f"Start training {dsname} with {sampling} methods")
     # train the model
