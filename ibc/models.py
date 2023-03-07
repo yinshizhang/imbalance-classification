@@ -19,3 +19,17 @@ class MLP(nn.Module):
     def forward(self, x):
         logits = self.linear_relu_stack(x)
         return logits
+
+
+class SMLP(nn.Module):
+    def __init__(self, input_size=30):
+        super(SMLP, self).__init__()
+        self.linear_relu_stack = nn.Sequential(
+            nn.Linear(input_size, 1024),
+            nn.ReLU(),
+            nn.Linear(1024, 1),
+        )
+
+    def forward(self, x):
+        logits = self.linear_relu_stack(x)
+        return logits
