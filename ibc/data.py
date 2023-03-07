@@ -62,12 +62,13 @@ def test_split(x, y, test_size=0.2, normalize='scale', seed=0):
 
 
 # do resampling early than convert to dataset.
-def resampling(x, y, sampling='nonsampling'):
+def resampling(x, y, sampling='nonsampling', **kwargs):
     '''
     x: numpy array
     y: numpy array
     sampling: str, 'nonsampling', 'oversampling', 'smote', 'adasyn', 'blsmote', 'adsmote', 'adboth'
     seed: int, random seed
+    **kwargs: m_neighbors, n_neighbors, alpha
     '''
 
     if sampling == 'nonsampling':
@@ -76,7 +77,7 @@ def resampling(x, y, sampling='nonsampling'):
         ros = SAMPLERS[sampling]()
         x_resampled, y_resampled = ros.fit_resample(x, y)
     elif sampling in CUSTOM_SAMPLERS:
-        x_resampled, y_resampled = CUSTOM_SAMPLERS[sampling](x, y)
+        x_resampled, y_resampled = CUSTOM_SAMPLERS[sampling](x, y, **kwargs)
     else:
         raise ValueError(f'Unknown sampling method: {sampling}.')
     # TODO: implement custom resampling methods

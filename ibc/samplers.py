@@ -3,7 +3,7 @@ from sklearn.neighbors import NearestNeighbors
 
 
 # blmovgen class for binary classification
-def blmovgen(x, y, n_neighbors=5, alpha=1.0):
+def blmovgen(x, y, n_neighbors=5, alpha=1.0, **kwargs):
     # sample strategy for each minority classes
     _, counts = np.unique(y, return_counts=True)
     sample_size = max(counts) - counts
@@ -90,13 +90,15 @@ def base_adasyn(x, y, c, rate=1, m_neighbors=5, n_neighbors=5):
     # the only difference from blmovgen
     _, min_nbrs_ids = global_nbrs.kneighbors(x[min_idxs])
     weights = np.array([(y[id] != c).sum() for id in min_nbrs_ids])
+    if weights.sum() == 0:
+        return x, y
 
     # find nearest majority neighbors for each minority instance
     nbrs = NearestNeighbors(n_neighbors=n_neighbors).fit(x[min_idxs])
     _, indices = nbrs.kneighbors(x[min_idxs])
 
     # generate synthetic data
-    for j in np.random.choice(len(min_idxs), size=weights.sum() * rate, p=weights / weights.sum()):
+    for j in np.random.choice(len(min_idxs), size=weights.sum() * rate, p=weights / weights.sum()if weights.sum() != 0 else None):
         min_idx = min_idxs[j]
         rand_idx = np.random.randint(1, n_neighbors)
         fac = np.random.rand()
