@@ -235,3 +235,42 @@ def blmixrand(x, y, n_neighbors=5, alpha=0.5, **kwargs):
     gen_x = np.array(gen_x)
     gen_y = np.array(gen_y)
     return np.concatenate((x, gen_x), axis=0), np.concatenate((y, gen_y), axis=0)
+
+
+# admixup class
+def admix(x, y, m_neighbors=10, n_neighbors=5, alpha=0.5):
+    # sample strategy for each minority classes
+    _, counts = np.unique(y, return_counts=True)
+    sample_size = max(counts) - counts
+
+    gen_x = []
+    gen_y = []
+
+    # generate synthetic data for each minority class
+    global_nbrs = NearestNeighbors(n_neighbors=m_neighbors).fit(x)
+    for i, size in enumerate(sample_size):
+        if size == 0:
+            continue
+        min_idxs = np.where(y == i)[0]
+        maj_idxs = np.where(y != i)[0]
+
+        # calculate the weights for each minority instance
+        # the only difference from blmovgen
+        _, min_nbrs_ids = global_nbrs.kneighbors(x[min_idxs])
+        weights = np.array([(y[id] == i).sum() for id in min_nbrs_ids])
+
+        # find nearest majority neighbors for each minority instance
+        nbrs = NearestNeighbors(n_neighbors=n_neighbors).fit(x[maj_idxs])
+        _, indices = nbrs.kneighbors(x[min_idxs])
+
+        # generate synthetic data
+        for j in np.random.choice(len(min_idxs), size=size, p=weights / weights.sum()):
+            min_idx = min_idxs[j]
+            rand_idx = np.random.randint(n_neighbors)
+            maj_idx2 = maj_idxs[indices[j][rand_idx]]
+            new_x = x[min_idx] * alpha + x[maj_idx2] * (1 - alpha)
+            gen_x.append(new_x)
+            gen_y.append(i)
+    gen_x = np.array(gen_x)
+    gen_y = np.array(gen_y)
+    return np.concatenate((x, gen_x), axis=0), np.concatenate((y, gen_y), axis=0)
