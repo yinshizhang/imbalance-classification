@@ -8,36 +8,7 @@ from torchmetrics.classification import (
     BinaryConfusionMatrix,
     BinaryAveragePrecision
 )
-# # to be removed
-# from torchmetrics.utilities.data import dim_zero_cat
-# from torchmetrics.functional.classification.auroc import _binary_auroc_arg_validation, _binary_auroc_compute
 
-# class BinaryAUROC(BinaryPrecisionRecallCurve):
-
-#     is_differentiable: bool = False
-#     higher_is_better: Optional[bool] = None
-#     full_state_update: bool = False
-
-#     def __init__(
-#         self,
-#         max_fpr: Optional[float] = None,
-#         thresholds: Optional[Union[int, List[float], Tensor]] = None,
-#         ignore_index: Optional[int] = None,
-#         validate_args: bool = True,
-#         **kwargs: Any,
-#     ) -> None:
-#         super().__init__(thresholds=thresholds,
-#                          ignore_index=ignore_index, validate_args=False, **kwargs)
-#         if validate_args:
-#             _binary_auroc_arg_validation(max_fpr, thresholds, ignore_index)
-#         self.max_fpr = max_fpr
-
-#     def compute(self) -> Tensor:
-#         if self.thresholds is None:
-#             state = [dim_zero_cat(self.preds), dim_zero_cat(self.target)]
-#         else:
-#             state = self.confmat
-#         return _binary_auroc_compute(state, self.thresholds, self.max_fpr)
 
 
 class Metrics:
