@@ -37,7 +37,7 @@ def blmovgen(x, y, n_neighbors=5, alpha=1.0, **kwargs):
 
 
 # admovgen class
-def admovgen(x, y, m_neighbors=5, n_neighbors=5, alpha=1.0):
+def admovgen(x, y, m_neighbors=10, n_neighbors=5, alpha=1.0):
     # sample strategy for each minority classes
     _, counts = np.unique(y, return_counts=True)
     sample_size = max(counts) - counts
@@ -77,7 +77,7 @@ def admovgen(x, y, m_neighbors=5, n_neighbors=5, alpha=1.0):
 
 
 # base_adasyn class
-def base_adasyn(x, y, c, rate=1, m_neighbors=5, n_neighbors=5):
+def base_adasyn(x, y, c, rate=1, m_neighbors=10, n_neighbors=5):
     gen_x = []
     gen_y = []
 
@@ -112,7 +112,7 @@ def base_adasyn(x, y, c, rate=1, m_neighbors=5, n_neighbors=5):
 
 
 # TODO: adboth class: adasyn for majority and movgen(blmovgen, admovgen) for minority
-def adboth(x, y, m_neighbors=5, n_neighbors=5, alpha=1.0):
+def adboth(x, y, m_neighbors=10, n_neighbors=5, alpha=1.0):
     # generate synthetic data for each majority class
     # TODO: different idea to generate for majority class: 
         # 1. use the same weights as minority class

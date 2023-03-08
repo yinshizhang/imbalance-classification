@@ -24,7 +24,7 @@ def svm_metric(y_true, y_pred):
     ap = average_precision_score(y_true, y_pred)
     return acc, recall, precision, f1, gmean, auc, ap
 
-def run(dsname, sampling, seed, test_size=0.5, outexten='', m_neighbors=5, n_neighbors=5):
+def run(dsname, sampling, seed, test_size=0.5, outexten='', m_neighbors=10, n_neighbors=5):
 
     # load data
     x, y = load_data(dsname)
