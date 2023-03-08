@@ -2,7 +2,7 @@ import torch
 import numpy as np
 import pandas as pd
 from torch.utils.data import Dataset
-from .samplers import blmovgen, admovgen, adboth, blmix, blmixrand, admix
+from .samplers import blmovgen, admovgen, adboth, blmix, blmixrand, admix, blpar
 from imblearn.over_sampling import RandomOverSampler, SMOTE, ADASYN, BorderlineSMOTE
 
 
@@ -27,7 +27,8 @@ CUSTOM_SAMPLERS = {'blmovgen': blmovgen,
                    'adboth': adboth,
                    'blmix': blmix,
                    'blmixrand': blmixrand,
-                   'admix': admix
+                   'admix': admix,
+                   'blpar': blpar
                    }
 
 

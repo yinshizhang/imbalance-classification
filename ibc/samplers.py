@@ -277,7 +277,7 @@ def admix(x, y, m_neighbors=10, n_neighbors=5, alpha=0.5):
 
 
 # blpar class for binary classification
-def blpar(x, y, m_neighbors=5, n_neighbors=5, alpha=1.0):
+def blpar(x, y, m_neighbors=10, n_neighbors=5, alpha=1.0):
     # sample strategy for each minority classes
     _, counts = np.unique(y, return_counts=True)
     sample_size = max(counts) - counts
@@ -296,7 +296,7 @@ def blpar(x, y, m_neighbors=5, n_neighbors=5, alpha=1.0):
         # calculate the weights for each minority instance
         # the only difference from blmovgen
         _, min_nbrs_ids = global_nbrs.kneighbors(x[min_idxs])
-        weights = np.array([(y[id] == i).sum() for id in min_nbrs_ids])
+        weights = np.array([(y[id] != i).sum() * 2 > n_neighbors for id in min_nbrs_ids], dtype=float)
 
         # find nearest majority neighbors for each minority instance
         nbrs = NearestNeighbors(n_neighbors=n_neighbors).fit(x[maj_idxs])
