@@ -37,7 +37,7 @@ def run(dsname, sampling, seed, test_size=0.5, outexten='', m_neighbors=10, n_ne
     model = SVC(kernel='rbf', gamma='scale', probability=True)
 
     # create log file
-    fname = f"svm_results{'' if outexten == '' else '_' + outexten}.csv"
+    fname = f"results/svm_results{'' if outexten == '' else '_' + outexten}.csv"
     if not os.path.exists(fname):
         with open(fname, 'w') as f:
             f.write(
