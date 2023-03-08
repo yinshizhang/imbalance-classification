@@ -51,10 +51,16 @@ def test_split(x, y, test_size=0.2, normalize='scale', seed=0):
     seed: int, random seed
     '''
     np.random.seed(seed)
-    idx = np.random.permutation(len(y))
-    split = int(len(y) * test_size)
-    x_train, x_test = x[idx[split:]], x[idx[:split]]
-    y_train, y_test = y[idx[split:]], y[idx[:split]]
+    pidx = np.where(y == 1)[0]
+    nidx = np.where(y == 0)[0]
+    np.random.shuffle(pidx)
+    np.random.shuffle(nidx)
+    split = int(len(pidx) * test_size), int(len(nidx) * test_size)
+    testid = np.concatenate((pidx[:split[0]], nidx[:split[1]]))
+    trainid = np.concatenate((pidx[split[0]:], nidx[split[1]:]))
+
+    x_test, x_train = x[testid], x[trainid]
+    y_test, y_train = y[testid], y[trainid]
     # normalize the data into same scale
     if normalize == 'scale':
         x_train /= x_train.max(0)  # normalize is vital for MLP
