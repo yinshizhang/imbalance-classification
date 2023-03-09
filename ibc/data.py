@@ -11,7 +11,9 @@ D_PATH = {'root': '/bask/homes/c/cxx075/Chenguang/datasets/ADASYN/',
           'diabete': '1_Diabetes_no_header.csv',
           'vowel': '2_vowel_hid_vs_other.csv',
           'ionosphere': '3_ionosphere_no_header.csv',
-          'abalone': '4_Abalone_no_header.csv'
+          'abalone': '4_Abalone_no_header.csv',
+          'satimage': '5_dataset_186_satimage_4_vs_other.csv',
+          'haberman': '6_dataset_43_haberman.csv'
           }
 
 
